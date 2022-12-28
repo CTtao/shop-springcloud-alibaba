@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveOrder(OrderParams orderParams) {
-        if (OrderParams.isEmpty()){
+        if (orderParams.isEmpty()){
             throw new RuntimeException("参数异常:" + JSONObject.toJSONString(orderParams));
         }
 

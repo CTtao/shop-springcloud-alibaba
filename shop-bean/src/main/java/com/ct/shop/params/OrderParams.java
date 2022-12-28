@@ -16,7 +16,9 @@ public class OrderParams {
     private Long productId;
     private Integer count;
 
-    public static boolean isEmpty() {
-        return false;
+    public boolean isEmpty() {
+        return (productId == null || productId <= 0) ||
+                (userId == null || userId <= 0) ||
+                (count == null || count <= 0);
     }
 }
