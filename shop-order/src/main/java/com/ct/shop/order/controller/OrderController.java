@@ -25,4 +25,10 @@ public class OrderController {
         orderService.saveOrder(orderParams);
         return "success";
     }
+
+    @GetMapping("/test_sentinel")
+    public String testSentinel(){
+        log.info("测试sentinel");
+        return "sentinel";
+    }
 }
