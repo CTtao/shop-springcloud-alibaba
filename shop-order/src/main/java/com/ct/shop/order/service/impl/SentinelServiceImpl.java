@@ -2,6 +2,8 @@ package com.ct.shop.order.service.impl;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.ct.shop.order.handler.MyBlockHandler;
+import com.ct.shop.order.handler.MyFallback;
 import com.ct.shop.order.service.SentinelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,9 @@ public class SentinelServiceImpl implements SentinelService {
     @Override
     @SentinelResource(
             value = "sendMessage2",
+            blockHandlerClass = MyBlockHandler.class,
             blockHandler = "blockHandler",
+            fallbackClass = MyFallback.class,
             fallback = "fallback"
     )
     public String sendMessage2() {
