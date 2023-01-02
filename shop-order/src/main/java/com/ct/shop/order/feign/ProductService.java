@@ -1,12 +1,13 @@
 package com.ct.shop.order.feign;
 
 import com.ct.shop.bean.Product;
+import com.ct.shop.order.feign.fallback.ProductServiceFallback;
 import com.ct.shop.utils.resp.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient("server-product")
+@FeignClient(value = "server-product",fallback = ProductServiceFallback.class)
 public interface ProductService {
     @GetMapping("/product/get/{pid}")
     Product getProduct(@PathVariable("pid") Long pid);

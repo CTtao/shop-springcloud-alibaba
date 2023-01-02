@@ -53,9 +53,15 @@ public class OrderServiceImpl implements OrderService {
         if (user == null){
             throw new RuntimeException("未获取到用户信息:" + JSONObject.toJSONString(orderParams));
         }
+        if (user.getId() == -1){
+            throw new RuntimeException("触发了用户微服务的容错逻辑：" + JSONObject.toJSONString(orderParams));
+        }
         Product product = productService.getProduct(orderParams.getProductId());
         if (product == null){
             throw new RuntimeException("未获取到商品信息: " + JSONObject.toJSONString(orderParams));
+        }
+        if (product.getId() == -1){
+            throw new RuntimeException("触发了商品微服务的容错逻辑：" + JSONObject.toJSONString(orderParams));
         }
         if (product.getProStock() < orderParams.getCount()){
             throw new RuntimeException("商品库存不足: " + JSONObject.toJSONString(orderParams));
@@ -78,6 +84,9 @@ public class OrderServiceImpl implements OrderService {
         orderItemMapper.insert(orderItem);
 
         ResponseResult<Integer> result = productService.updateCount(orderParams.getProductId(),orderParams.getCount());
+        if (result.getCode() == 1001){
+            throw new RuntimeException("触发了商品微服务的容错逻辑:" + JSONObject.toJSONString(orderParams));
+        }
         if (result.getCode() != HttpCode.SUCCESS){
             throw new RuntimeException("库存扣减失败");
         }
