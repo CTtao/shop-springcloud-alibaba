@@ -5,6 +5,8 @@ import com.ct.shop.bean.Order;
 import com.ct.shop.bean.OrderItem;
 import com.ct.shop.bean.Product;
 import com.ct.shop.bean.User;
+import com.ct.shop.order.feign.ProductService;
+import com.ct.shop.order.feign.UserService;
 import com.ct.shop.order.mapper.OrderItemMapper;
 import com.ct.shop.order.mapper.OrderMapper;
 import com.ct.shop.order.service.OrderService;
@@ -34,12 +36,11 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
     @Resource
     private OrderItemMapper orderItemMapper;
+
     @Resource
-    private RestTemplate restTemplate;
-
-
-    private String userServer = "server-user";
-    private String productServer = "server-product";
+    private UserService userService;
+    @Resource
+    private ProductService productService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -48,11 +49,11 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("参数异常:" + JSONObject.toJSONString(orderParams));
         }
 
-        User user = restTemplate.getForObject("http://" + userServer +"/user/get/" + orderParams.getUserId(), User.class);
+        User user = userService.getUser(orderParams.getUserId());
         if (user == null){
             throw new RuntimeException("未获取到用户信息:" + JSONObject.toJSONString(orderParams));
         }
-        Product product = restTemplate.getForObject("http://" + productServer +"/product/get/" + orderParams.getProductId(), Product.class);
+        Product product = productService.getProduct(orderParams.getProductId());
         if (product == null){
             throw new RuntimeException("未获取到商品信息: " + JSONObject.toJSONString(orderParams));
         }
@@ -76,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
         orderItem.setProPrice(product.getProPrice());
         orderItemMapper.insert(orderItem);
 
-        ResponseResult<Integer> result = restTemplate.getForObject("http://"+ productServer + "/product/update_count/" + orderParams.getProductId() + "/" + orderParams.getCount(), ResponseResult.class);
+        ResponseResult<Integer> result = productService.updateCount(orderParams.getProductId(),orderParams.getCount());
         if (result.getCode() != HttpCode.SUCCESS){
             throw new RuntimeException("库存扣减失败");
         }
