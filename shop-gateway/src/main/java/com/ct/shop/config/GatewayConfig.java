@@ -1,5 +1,10 @@
 package com.ct.shop.config;
 
+import com.alibaba.csp.sentinel.adapter.gateway.common.SentinelGatewayConstants;
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiDefinition;
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPathPredicateItem;
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPredicateItem;
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.GatewayApiDefinitionManager;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
@@ -53,8 +58,9 @@ public class GatewayConfig {
 
     @PostConstruct
     public void init(){
-        this.initGatewayRules();
+//        this.initGatewayRules();
         this.initBlockHandlers();
+        this.initCustomizedApis();
     }
 
     private void initGatewayRules(){
@@ -65,6 +71,25 @@ public class GatewayConfig {
         rules.add(this.getGatewayFlowRule(getResource("server-order")));
 
         GatewayRuleManager.loadRules(rules);
+    }
+
+    private void initCustomizedApis(){
+        HashSet<ApiDefinition> definitions = new HashSet<>();
+        ApiDefinition api1 = new ApiDefinition("user_api1")
+                .setPredicateItems(new HashSet<ApiPredicateItem>() {{
+            add(new ApiPathPredicateItem()
+                    .setPattern("/server-user/user/api1/**")
+                    .setMatchStrategy(SentinelGatewayConstants.URL_MATCH_STRATEGY_PREFIX));
+        }});
+        ApiDefinition api2 = new ApiDefinition("user_api2")
+                .setPredicateItems(new HashSet<ApiPredicateItem>() {{
+                    add(new ApiPathPredicateItem()
+                            .setPattern("/server-user/user/api2/demo1"));
+                }});
+        definitions.add(api1);
+        definitions.add(api2);
+        GatewayApiDefinitionManager.loadApiDefinitions(definitions);
+
     }
 
     private String getResource(String targetServiceName){
