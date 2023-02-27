@@ -34,7 +34,7 @@ import java.util.*;
  * @author CT
  * @description
  */
-@Configuration
+//@Configuration
 public class GatewayConfig {
     private final List<ViewResolver> viewResolvers;
     private final ServerCodecConfigurer serverCodecConfigurer;
