@@ -21,7 +21,6 @@ spring:
             - Path=/server-user/**
           filters:
             - StripPrefix=1
-            - Grayscale=true
 
         - id: product-gateway
           uri: http://localhost:8070
