@@ -21,9 +21,7 @@ spring:
             - Path=/server-user/**
           filters:
             - StripPrefix=1
-            - AddRequestHeader=IP,localhost
-            - AddRequestParameter=name,binghe
-            - SetStatus=1001
+            - Grayscale=true
 
         - id: product-gateway
           uri: http://localhost:8070
