@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Tao
@@ -46,5 +48,14 @@ public class UserController {
     public String api2Demo2(){
         log.info("访问了api2Demo2接口");
         return "api2Demo2";
+    }
+
+    @GetMapping("/api/filter1")
+    public String apiFilter1(HttpServletRequest request, HttpServletResponse response){
+        log.info("访问了apiFilter1接口");
+        String ip = request.getHeader("IP");
+        String name = request.getParameter("name");
+        log.info("ip = " + ip + ", name = " + name);
+        return "apiFilter1";
     }
 }
