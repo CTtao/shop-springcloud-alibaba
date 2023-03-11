@@ -58,4 +58,12 @@ public class UserController {
         log.info("ip = " + ip + ", name = " + name);
         return "apiFilter1";
     }
+
+    @GetMapping("/async/api")
+    public String asyncApi(){
+        log.info("执行异步任务开始...");
+        userService.asyncMethod();
+        log.info("异步任务执行结束");
+        return "asyncApi";
+    }
 }

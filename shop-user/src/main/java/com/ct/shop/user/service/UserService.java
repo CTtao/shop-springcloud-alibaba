@@ -8,4 +8,6 @@ import com.ct.shop.bean.User;
  */
 public interface UserService {
     User getUserById(Long userId);
+
+    void asyncMethod();
 }
