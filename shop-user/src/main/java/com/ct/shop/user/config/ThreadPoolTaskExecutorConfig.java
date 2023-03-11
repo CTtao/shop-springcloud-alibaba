@@ -1,10 +1,14 @@
 package com.ct.shop.user.config;
 
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.cloud.sleuth.instrument.async.LazyTraceExecutor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import javax.annotation.Resource;
 import java.util.concurrent.Executor;
 
 /**
@@ -14,6 +18,8 @@ import java.util.concurrent.Executor;
 @Configuration
 @EnableAutoConfiguration
 public class ThreadPoolTaskExecutorConfig extends AsyncConfigurerSupport {
+    @Resource
+    private BeanFactory beanFactory;
 
     @Override
     public Executor getAsyncExecutor() {
@@ -23,6 +29,6 @@ public class ThreadPoolTaskExecutorConfig extends AsyncConfigurerSupport {
         executor.setQueueCapacity(10);
         executor.setThreadNamePrefix("trace-thread-");
         executor.initialize();
-        return executor;
+        return new LazyTraceExecutor(this.beanFactory,executor);
     }
 }
