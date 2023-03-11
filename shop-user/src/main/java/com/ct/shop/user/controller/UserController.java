@@ -66,4 +66,12 @@ public class UserController {
         log.info("异步任务执行结束");
         return "asyncApi";
     }
+
+    @GetMapping("/sleuth/filter/api")
+    public String sleuthFilter(HttpServletRequest request){
+        Object traceIdObj = request.getAttribute("traceId");
+        String traceId = traceIdObj == null ? "": traceIdObj.toString();
+        log.info("获取到的traceId为：" + traceId);
+        return "sleuthFilter";
+    }
 }
