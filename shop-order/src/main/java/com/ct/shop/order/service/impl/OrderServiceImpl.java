@@ -14,6 +14,7 @@ import com.ct.shop.params.OrderParams;
 import com.ct.shop.utils.constants.HttpCode;
 import com.ct.shop.utils.resp.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,9 @@ public class OrderServiceImpl implements OrderService {
     private UserService userService;
     @Resource
     private ProductService productService;
+
+    @Resource
+    private RocketMQTemplate rocketMQTemplate;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -91,6 +95,8 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("库存扣减失败");
         }
         log.info("库存扣减成功");
+
+        rocketMQTemplate.convertAndSend("order-topic",order);
     }
 
 }

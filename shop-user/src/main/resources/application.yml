@@ -42,3 +42,6 @@ mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
   configuration:
     jdbc-type-for-null: 'null'
+
+rocketmq:
+  name-server: 127.0.0.1:9876
