@@ -10,6 +10,7 @@ spring:
     url: jdbc:mysql://localhost:3306/cloud-shop?useSSL=false&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
+    platform: mysql
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       initial-size: 10
@@ -35,6 +36,11 @@ spring:
         port: 9999
         dashboard: 127.0.0.1:8888
       web-context-unify: false
+  http:
+    encoding:
+      enabled: true
+      charset: UTF-8
+      force: true
 feign:
   sentinel:
     enabled: true
